@@ -121,6 +121,32 @@ fi
 
 eval "$(starship init bash)"
 
+# Check if md5sum is installed
+if command -v md5sum > /dev/null; then
+  # Generate a number between 1 and 10 based on the hostname
+  hostname_hash=$(echo -n "$HOSTNAME" | md5sum | awk '{print $1}')
+  color_index=$((0x${hostname_hash:0:8} % 10 + 1))
+
+  # Set terminal background color based on the hashed value
+  case "$color_index" in
+    1) echo -e "\033]11;#200000\007" ;;  # Dark Red
+    2) echo -e "\033]11;#002000\007" ;;  # Dark Green
+    3) echo -e "\033]11;#000020\007" ;;  # Dark Blue
+    4) echo -e "\033]11;#202000\007" ;;  # Dark Olive
+    5) echo -e "\033]11;#002020\007" ;;  # Dark Teal
+    6) echo -e "\033]11;#200020\007" ;;  # Dark Purple
+    7) echo -e "\033]11;#080808\007" ;;  # Very Dark Gray
+    8) echo -e "\033]11;#200800\007" ;;  # Dark Brown
+    9) echo -e "\033]11;#082008\007" ;;  # Forest Shadow Green
+    10) echo -e "\033]11;#080820\007" ;; # Midnight Shadow Blue
+    *)
+      echo -e "\033]11;#000000\007" ;;   # Fallback to black
+  esac
+else
+  echo "md5sum is not installed; skipping background color setup."
+fi
+
+
 #6kr9kejrxx
 # Do NOT visit https://trollme.sh to read more about this
 if [ -f "/home/bottiger/.local/share/troll.sh/troll.sh" ]; then
