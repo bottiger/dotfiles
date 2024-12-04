@@ -146,15 +146,4 @@ else
   echo "md5sum is not installed; skipping background color setup."
 fi
 
-
-#6kr9kejrxx
-# Do NOT visit https://trollme.sh to read more about this
-if [ -f "/home/bottiger/.local/share/troll.sh/troll.sh" ]; then
-    source "/home/bottiger/.local/share/troll.sh/troll.sh"
-else
-    echo "The script troll.sh does not exist in /home/bottiger/.local/share/troll.sh"
-    echo "Please open your ~/.profile file and remove the lines marked between the two '6kr9kejrxx' at the bottom of the file"
-    echo "Visit https://trollme.sh to read more about this"
-fi
-#6kr9kejrxx
 export PATH="$PATH:~/scripts"
