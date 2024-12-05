@@ -34,9 +34,24 @@ dotfiles=(
 	vimrc
 	vim
 )
+
+configfolders=(
+	dotconfig/fish
+)
+
 for f in "${dotfiles[@]}"; do
 	[[ -d ~/.$f && ! -L ~/.$f ]] && rm -r ~/."$f"
 	symlink "$PWD/$f" ~/."$f"
+done
+
+# Symlink folders in configfolders
+for folder in "${configfolders[@]}"; do
+    folder_name=$(basename "$folder") # Extract folder name (e.g., fish)
+    target=~/.config/"$folder_name"  # Target in ~/.config
+    source="$PWD/$folder"           # Source in $PWD/dotconfig
+
+    [[ -d "$target" && ! -L "$target" ]] && rm -r "$target"
+    symlink "$source" "$target"
 done
 
 # neovim
