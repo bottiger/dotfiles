@@ -135,7 +135,7 @@ if command -v md5sum > /dev/null; then
     4) echo -e "\033]11;#202000\007" ;;  # Dark Olive
     5) echo -e "\033]11;#002020\007" ;;  # Dark Teal
     6) echo -e "\033]11;#200020\007" ;;  # Dark Purple
-    7) echo -e "\033]11;#080808\007" ;;  # Very Dark Gray
+    7) echo -e "\033]11;#A91B60\007" ;;  # Dark Pink
     8) echo -e "\033]11;#200800\007" ;;  # Dark Brown
     9) echo -e "\033]11;#082008\007" ;;  # Forest Shadow Green
     10) echo -e "\033]11;#080820\007" ;; # Midnight Shadow Blue
@@ -147,3 +147,6 @@ else
 fi
 
 export PATH="$PATH:~/scripts"
+
+# suppress deprecation warnings from bash on macOS
+export BASH_SILENCE_DEPRECATION_WARNING=1
