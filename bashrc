@@ -134,12 +134,14 @@ get_hardware_uuid() {
     uuid=$(ioreg -rd1 -c IOPlatformExpertDevice | awk -F'"' '/IOPlatformUUID/{print $4}')
   fi
 
-  # Linux: Use DMI or other available sources
+  # Linux: Use /etc/machine-id or other available sources
   if [[ "$(uname)" == "Linux" ]]; then
-    if [[ -f /sys/class/dmi/id/product_uuid ]]; then
-      uuid=$(cat /sys/class/dmi/id/product_uuid)
+    if [[ -f /etc/machine-id ]]; then
+      uuid=$(cat /etc/machine-id)
     elif command -v dmidecode > /dev/null 2>&1; then
       uuid=$(dmidecode -s system-uuid 2>/dev/null)
+    else
+      uuid=$(hostname)
     fi
   fi
 
