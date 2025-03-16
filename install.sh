@@ -37,6 +37,7 @@ dotfiles=(
 
 configfolders=(
 	dotconfig/fish
+	dotbashrc.d
 )
 
 for f in "${dotfiles[@]}"; do
@@ -44,15 +45,23 @@ for f in "${dotfiles[@]}"; do
 	symlink "$PWD/$f" ~/."$f"
 done
 
-# Symlink folders in configfolders
+# Symlink folders in configfolders with dot prefix replacement
 for folder in "${configfolders[@]}"; do
-    folder_name=$(basename "$folder") # Extract folder name (e.g., fish)
-    target=~/.config/"$folder_name"  # Target in ~/.config
-    source="$PWD/$folder"           # Source in $PWD/dotconfig
-
+    source="$PWD/$folder"
+    target="$HOME/.${folder#dot}"  # Remove first 'dot' and prepend '.'
+    
+    # Remove existing directory if it's not a symlink
     [[ -d "$target" && ! -L "$target" ]] && rm -r "$target"
-    symlink "$source" "$target"
+    
+    # Create parent directory if it doesn't exist
+    mkdir -p "$(dirname "$target")"
+    
+    # Create symlink
+    #ln -sf "$source" "$target"
+	symlink "$source" "$target"
 done
 
 # neovim
 symlink ~/.vim ~/.config/nvim
+
+source ~/.bashrc.d/init_ssh_config.sh
