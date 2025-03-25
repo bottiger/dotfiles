@@ -123,9 +123,14 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
+
 . "$HOME/.cargo/env"
 
-eval "$(starship init bash)"
+if command -v starship >/dev/null 2>&1; then
+  eval "$(starship init bash)"
+else
+  echo ".bashrc: starship is not installed"  >&2 
+fi
 
 export PATH="$PATH:~/scripts"
 

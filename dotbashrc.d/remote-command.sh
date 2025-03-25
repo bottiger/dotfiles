@@ -1,9 +1,16 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 
-#source ~/.bashrc
+# Set a random background color for the terminal when connecting to a remote host
+ssh() {
+    local remote_host="$1"
+    
+    if [[ -n "$remote_host" ]]; then
+        set_rnd_bg_color "$remote_host"
+    fi
 
-if [ "$DOT_BOTTIGER" = "1" ]; then
-    return
-fi
+    command ssh "$@"
 
-#source ~/.bashrc.d/ssh-bash-completion.sh
+    if [ -t 1 ]; then
+        set_rnd_bg_color
+    fi
+}
