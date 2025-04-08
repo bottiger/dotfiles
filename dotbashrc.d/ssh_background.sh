@@ -1,5 +1,6 @@
 set_bg_color() {
     local color="$1"
+    export SHELL_BG_COLOR="$color"
     printf "\033]11;%s\007" "$color" > /dev/tty
 }
 
@@ -31,10 +32,23 @@ get_hardware_uuid() {
 }
 
 set_rnd_bg_color() {
-  #local input=${1:-$HOSTNAME}
-  local input=${1:-$(get_hardware_uuid)}
+  local input
 
-  #echo input: $input
+  # If an argument is provided, use it and set the environment variable
+  if [[ -n "$1" ]]; then
+    input="$1"
+    #export SHELL_BG_COLOR="$1"
+    set_bg_color "$1"
+    # If the environment variable is set, use it
+    return
+  elif [[ -n "$SHELL_BG_COLOR" ]]; then
+    input="$SHELL_BG_COLOR"
+    set_bg_color "$SHELL_BG_COLOR"
+    return 
+  else
+    # Otherwise, default to the hardware UUID
+    input=$(get_hardware_uuid)
+  fi
 
   # Check if md5sum is installed
   if command -v md5sum > /dev/null; then
@@ -42,25 +56,23 @@ set_rnd_bg_color() {
     input_hash=$(echo -n "$input" | md5sum | awk '{print $1}')
     color_index=$((0x${input_hash:0:8} % 10 + 1))
 
-    #echo color_index: $color_index
-
     # Set terminal background color based on the hashed value
     case "$color_index" in
-      1) echo -e "\033]11;#200000\007" ;;  # Dark Red
-      2) echo -e "\033]11;#002000\007" ;;  # Dark Green
-      3) echo -e "\033]11;#000020\007" ;;  # Dark Blue
-      4) echo -e "\033]11;#202000\007" ;;  # Dark Olive
-      5) echo -e "\033]11;#002020\007" ;;  # Dark Teal
-      6) echo -e "\033]11;#200020\007" ;;  # Dark Purple
-      7) echo -e "\033]11;#200800\007" ;;  # Dark Brown
-      8) echo -e "\033]11;#A91B60\007" ;;  # Dark Pink
-      9) echo -e "\033]11;#082008\007" ;;  # Forest Shadow Green
-      10) echo -e "\033]11;#080820\007" ;; # Midnight Shadow Blue
+      1) set_bg_color "#200000" ;;  # Dark Red
+      2) set_bg_color "#002000" ;;  # Dark Green
+      3) set_bg_color "#000020" ;;  # Dark Blue
+      4) set_bg_color "#202000" ;;  # Dark Olive
+      5) set_bg_color "#002020" ;;  # Dark Teal
+      6) set_bg_color "#200020" ;;  # Dark Purple
+      7) set_bg_color "#200800" ;;  # Dark Brown
+      8) set_bg_color "#A91B60" ;;  # Dark Pink
+      9) set_bg_color "#082008" ;;  # Forest Shadow Green
+      10) set_bg_color "#080820" ;; # Midnight Shadow Blue
       *)
-        echo -e "\033]11;#000000\007" ;;   # Fallback to black
+        set_bg_color "#000000" ;;   # Fallback to black
     esac
   else
-    echo "md5sum is not installed; skipping background color setup."
+    echo "md5sum is not installed; skipping background color setup." >&2
   fi
 }
 
