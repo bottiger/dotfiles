@@ -126,6 +126,8 @@ fi
 
 . "$HOME/.cargo/env"
 
+[ -f ~/.envvars ] && source ~/.envvars
+
 if command -v starship >/dev/null 2>&1; then
   eval "$(starship init bash)"
 else

@@ -1,0 +1,36 @@
+export SHELL_BG_COLOR="" # Shell background color. Empty for default
+
+# persistenv: Set and persist an environment variable across shell sessions.
+# Usage: persistenv VAR_NAME VAR_VALUE
+# - Updates VAR_NAME if it already exists in ~/.envvars
+# - Adds VAR_NAME at the top of ~/.envvars if it doesn’t exist
+# - Reloads ~/.envvars to apply changes immediately
+persistenv() {
+  local name="$1"
+  local value="$2"
+  local file="$HOME/.envvars"
+  local tmp="${file}.tmp"
+
+  if [[ -z "$name" || -z "$value" ]]; then
+    echo "Usage: persistenv VAR_NAME VAR_VALUE"
+    return 1
+  fi
+
+  # Try creating the tmp file
+  if ! grep -vE "^export ${name}=" "$file" > "$tmp" 2>/dev/null; then
+    echo "Error: Failed to create temporary file at $tmp"
+    return 1
+  fi
+
+  # Insert new definition at top with a blank line after
+  {
+    echo "export ${name}=\"${value}\""
+    cat "$tmp"
+  } > "$file"
+
+  rm -f "$tmp"
+
+  # Reload and export in current shell
+  source "$file"
+  export "$name"
+}

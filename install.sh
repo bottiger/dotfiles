@@ -33,6 +33,7 @@ dotfiles=(
 	tmux.conf
 	vimrc
 	vim
+	envvars
 )
 
 configfolders=(
