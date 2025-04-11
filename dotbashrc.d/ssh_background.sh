@@ -34,6 +34,11 @@ get_hardware_uuid() {
 set_rnd_bg_color() {
   local input
 
+  # Do not set background color if running in VSCode
+  if [[ "$TERM_PROGRAM" == "vscode" ]]; then
+    return
+  fi
+
   # If an argument is provided, use it and set the environment variable
   if [[ -n "$1" ]]; then
     input="$1"
