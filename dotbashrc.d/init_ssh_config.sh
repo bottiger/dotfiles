@@ -12,7 +12,8 @@ init_ssh_config() {
 
   # Remove existing block if it exists
   if grep -q "$start_marker" ~/.ssh/config; then
-    sed -i '' "/$start_marker/,/$end_marker/d" ~/.ssh/config
+    sed "/$start_marker/,/$end_marker/d" ~/.ssh/config > ~/.ssh/config.tmp
+    mv ~/.ssh/config.tmp ~/.ssh/config
   fi
 
   # Append the new block
