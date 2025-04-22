@@ -10,10 +10,15 @@ init_ssh_config() {
   mkdir -p ~/.ssh
   touch ~/.ssh/config
 
+  # Capture original permissions
+  perms=$(stat -c %a ~/.ssh/config 2>/dev/null || stat -f %Lp ~/.ssh/config)
+
   # Remove existing block if it exists
   if grep -q "$start_marker" ~/.ssh/config; then
-    sed "/$start_marker/,/$end_marker/d" ~/.ssh/config > ~/.ssh/config.tmp
-    mv ~/.ssh/config.tmp ~/.ssh/config
+    tmpfile=$(mktemp)
+    sed "/$start_marker/,/$end_marker/d" ~/.ssh/config > "$tmpfile"
+    mv "$tmpfile" ~/.ssh/config
+    chmod "$perms" ~/.ssh/config
   fi
 
   # Append the new block
